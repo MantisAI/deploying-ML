@@ -1,1 +1,2 @@
+dvc[s3]
 sklearn
