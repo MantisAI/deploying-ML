@@ -1,2 +1,4 @@
 dvc[s3]
 sklearn
+pandas
+loguru
