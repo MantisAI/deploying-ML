@@ -12,13 +12,17 @@ VIRTUALENV := build/virtualenv
 # Set the default location for the virtualenv to be stored
 # Create the virtualenv by installing the requirements and test requirements
 
-$(VIRTUALENV)/.installed: requirements.txt
+$(VIRTUALENV): requirements.txt
+>>>>>>> a7e3bbd... chg: Fix Makefile targets
 	@if [ -d $(VIRTUALENV) ]; then rm -rf $(VIRTUALENV); fi
 	@mkdir -p $(VIRTUALENV)
 	virtualenv --python $(PYTHON_VERSION) $(VIRTUALENV)
 	$(VIRTUALENV)/bin/pip3 install -r requirements.txt
 	$(VIRTUALENV)/bin/pip3 install -r requirements_dev.txt
 	touch $@
+
+.PHONY: virtualenv
+virtualenv: $(VIRTUALENV)
 
 # Update the requirements to latest. This is required because typically we won't
 # want to incldue test requirements in the requirements of the application, and
