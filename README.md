@@ -89,3 +89,25 @@ dvc remote default s3
 dvc push
 ```
 
+## Processing the data (2-process-data)
+
+Add pandas a loguru to the `unpinned_requirements.txt` and update dependencies:
+
+```
+echo "pandas\nloguru" >> unpinned_requirements.txt
+make update-requirements-txt virtual-requirements
+```
+
+Create a new folder for source files and for processed data:
+
+```
+mkdir -p src data/processed
+```
+
+Add script to drop duplicates and NA values from the raw data and save to `data/processed/spam_data.csv`.
+
+Add this file to a `.gitignore` file so that git doesn't follow it.
+
+```
+echo data/processed/spam_data.csv >> data/processed/.gitignore
+```
