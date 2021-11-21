@@ -42,3 +42,50 @@ function activate {
 
 You'll then need to run `source ~/.bashrc` to make this function available in your current shell.
 
+## Adding the raw data to Data Version Control (1-data-version-control)
+
+The next step is to get the data. This is available from [kaggle](https://www.kaggle.com/team-ai/spam-text-message-classification) on an [CC0 license](https://creativecommons.org/publicdomain/zero/1.0/), but you will need to have a kaggle account and be signed in to access the download link.
+
+The downloaded dataset should be:
+
+|name|size|rows|
+|---|---|---|
+|SPAM text message 20170820 - Data.csv|485.7kb|5574|
+
+Download this dataset and put it in a new folder called `./data/raw/`
+
+```
+mkdir -p ./data/raw
+```
+
+Then add `dvc[s3]` to the unpinned depdendencies and update the virtualenv:
+
+```
+echo "dvc[s3]" >> unpinned_requirements.txt
+make update-requirements-txt virtualenv
+```
+
+Next, add the raw data to dvc with:
+
+```
+dvc add data/raw/SPAM\ text\ message\ 20170820\ -\ Data.csv
+```
+
+This will add two new files `./data/raw/.gitignore`, and will prompt us to add both, which we should do:
+
+```
+git add ./data/raw/.gitignore ./data/raw/SPAM text message 20170820 - Data.csv.dvc
+
+# Commit following your own flow, but as an example:
+
+git commit -m 'new: Added raw data to data/raw'
+```
+
+Optionally (though, ideally) you can also set a dvc remote, for example an s3 bucket:
+
+```
+dvc remote add s3 s3://mantisnlp-blogs/deploying-ML
+dvc remote default s3
+dvc push
+```
+
