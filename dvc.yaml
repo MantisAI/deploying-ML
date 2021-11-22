@@ -1,0 +1,11 @@
+vars:
+  - python: ./build/virtualenv/bin/python
+
+stages:
+    clean_data:
+      cmd: ${python} src/process_data.py
+      deps:
+        - src/process_data.py
+        - "./data/raw/SPAM text message 20170820 - Data.csv"
+      outs:
+        - ./data/processed/spam_data.csv

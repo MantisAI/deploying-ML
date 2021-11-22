@@ -1,0 +1,28 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: ./build/virtualenv/bin/python src/process_data.py
+    deps:
+    - path: ./data/raw/SPAM text message 20170820 - Data.csv
+      md5: 4566fe81ccd7961063e393a99e8ec2f1
+      size: 485702
+    - path: src/process_data.py
+      md5: c458f135285a5cf6d23596aa5f8d3eba
+      size: 605
+    outs:
+    - path: ./data/processed/spam_data.csv
+      md5: eee15aac82d82a827923651764e84c9d
+      size: 437656
+  clean_data:
+    cmd: ./build/virtualenv/bin/python src/process_data.py
+    deps:
+    - path: ./data/raw/SPAM text message 20170820 - Data.csv
+      md5: 4566fe81ccd7961063e393a99e8ec2f1
+      size: 485702
+    - path: src/process_data.py
+      md5: c458f135285a5cf6d23596aa5f8d3eba
+      size: 605
+    outs:
+    - path: ./data/processed/spam_data.csv
+      md5: eee15aac82d82a827923651764e84c9d
+      size: 437656

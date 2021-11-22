@@ -111,3 +111,40 @@ Add this file to a `.gitignore` file so that git doesn't follow it.
 ```
 echo data/processed/spam_data.csv >> data/processed/.gitignore
 ```
+
+## Add a dvc pipeline (3-dvc-pipeline)
+
+Next step is to create a dvc pipeline. This allows us to keep better track of our work by tracking it with dvc.
+
+We do this by defining a `dvc.yaml` file. In this file we define our worfklow setting the dependencies and the outputs that we want dvc to track. In this way, dvc is a bit like a Makefile, in that it creates a directed acyclic graph, which we can view with `dvc dag`:
+
+```
++----------------------------------------------------+ 
+| data/raw/SPAM text message 20170820 - Data.csv.dvc | 
++----------------------------------------------------+ 
+                           *                           
+                           *                           
+                           *                           
+                    +------------+                     
+                    | clean_data |                     
+                    +------------+                     
+```
+
+In this case, we had a very simple dag containing just a dependency (the data) and our cleaning step. We reproduce out pipeline with:
+
+```
+dvc repro
+```
+
+We can check what has been produced with:
+
+
+```
+>>> ls -gh data/processed/
+
+total 428K
+-rw-rw-r-- 1 matthew 428K nov 22 19:33 spam_data.csv
+```
+
+dvc prompts us to add the dvc.lock file to git, which we should do if we are happy with the outcome of the pipeline run.
+
