@@ -4,10 +4,15 @@ Create a train test split and save to disk
 import random
 
 import pandas as pd
+import yaml
 from loguru import logger
 
-test_prop = 0.4
-random_state = 1337
+with open("params.yaml", "r") as fd:
+    params = yaml.safe_load(fd)
+params = params["train_test_split"]
+
+random_state = params["random_state"]
+test_prop = params["test_prop"]
 
 data_path = "data/processed/spam_data.csv"
 train_path = "data/processed/train.csv"
@@ -15,9 +20,8 @@ test_path = "data/processed/test.csv"
 
 data = pd.read_csv(data_path)
 
-
 idx = list(range(0, len(data)))
-random.seed(random_state)
+random.seed(params["random_state"])
 random.shuffle(idx)
 
 train_size = round(len(data) * (1 - test_prop))

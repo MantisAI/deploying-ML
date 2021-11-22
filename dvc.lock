@@ -33,8 +33,13 @@ stages:
       md5: eee15aac82d82a827923651764e84c9d
       size: 437656
     - path: src/train_test_split.py
-      md5: f46f5e6f26c726ff755c06d6dced04a7
-      size: 811
+      md5: 8f3fa3afa5a3fa5b5707dfac1b626e68
+      size: 972
+    params:
+      params.yaml:
+        train_test_split:
+          test_prop: 0.4
+          random_state: 1337
     outs:
     - path: ./data/processed/test.csv
       md5: eac391f705cc77ea63bc2bdbba2de79c

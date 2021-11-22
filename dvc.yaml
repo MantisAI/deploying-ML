@@ -11,6 +11,8 @@ stages:
         - ./data/processed/spam_data.csv
     train_test_split:
       cmd: ${python} src/train_test_split.py
+      params:
+        - train_test_split
       deps:
         - src/train_test_split.py
         - ./data/processed/spam_data.csv
