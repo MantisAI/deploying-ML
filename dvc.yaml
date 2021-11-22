@@ -9,3 +9,11 @@ stages:
         - "./data/raw/SPAM text message 20170820 - Data.csv"
       outs:
         - ./data/processed/spam_data.csv
+    train_test_split:
+      cmd: ${python} src/train_test_split.py
+      deps:
+        - src/train_test_split.py
+        - ./data/processed/spam_data.csv
+      outs:
+        - ./data/processed/train.csv
+        - ./data/processed/test.csv
