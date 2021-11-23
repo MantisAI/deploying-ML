@@ -175,3 +175,33 @@ The dag from `dvc dag` now looks like:
                  | train_test_split |                  
                  +------------------+                  
 ```
+
+## Train a model (5-train-model)
+
+Here we add a script to train the model and output predictions to `./results`
+
+The dag from `dvc dag` now looks like:
+
+```
++----------------------------------------------------+ 
+| data/raw/SPAM text message 20170820 - Data.csv.dvc | 
++----------------------------------------------------+ 
+                           *                           
+                           *                           
+                           *                           
+                    +------------+                     
+                    | clean_data |                     
+                    +------------+                     
+                           *                           
+                           *                           
+                           *                           
+                 +------------------+                  
+                 | train_test_split |                  
+                 +------------------+                  
+                           *                           
+                           *                           
+                           *                           
+                      +-------+                        
+                      | train |                        
+                      +-------+                        
+```
