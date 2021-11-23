@@ -1,5 +1,4 @@
 dvc[s3]
-boto3
 sklearn
 pandas
 loguru

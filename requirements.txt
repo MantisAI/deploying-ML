@@ -1,5 +1,5 @@
 # Created by 'make update-requirements-txt'. DO NOT EDIT!
-aiobotocore
+aiobotocore==2.0.0
 aiohttp==3.8.1
 aiohttp-retry==2.4.6
 aioitertools==0.8.0
@@ -8,8 +8,8 @@ appdirs==1.4.3
 async-timeout==4.0.1
 atpublic==2.3
 attrs==21.2.0
-boto3
-botocore
+boto3==1.19.8
+botocore==1.22.8
 CacheControl==0.12.6
 certifi==2019.11.28
 cffi==1.15.0
