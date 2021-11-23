@@ -19,6 +19,7 @@ jobs:
           AWS_REGION: eu-west-1
         run: |
           pip install -r requirements.txt
+          dvc pull data/raw/SPAM\ text\ message\ 20170820\ -\ Data.csv
           dvc repro --pull
 
           echo "## Metrics" > report.md
