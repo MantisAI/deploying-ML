@@ -58,11 +58,11 @@ clf.fit(X_train, y_train)
 # Make predictions on train and test, and save to disk
 
 train_preds = clf.predict(X_train)
-pd.DataFrame(train_preds).to_csv(train_pred_path)
+pd.DataFrame(train_preds).to_csv(train_pred_path, index=False)
 logger.info("Saved {} predictions to {}", len(train_preds), train_pred_path)
 
 test_preds = clf.predict(X_test)
-pd.DataFrame(test_preds).to_csv(test_pred_path)
+pd.DataFrame(test_preds).to_csv(test_pred_path, index=False)
 logger.info("Saved {} predictions to {}", len(test_preds), test_pred_path)
 
 # Save objects that we need to re-use later
