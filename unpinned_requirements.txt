@@ -3,4 +3,3 @@ boto3
 sklearn
 pandas
 loguru
-aiobotocore==1.4.1
