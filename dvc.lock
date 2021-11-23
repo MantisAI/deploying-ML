@@ -10,8 +10,8 @@ stages:
       md5: 512caa781567ed847b3ef13174e11c90
       size: 265769
     - path: src/train.py
-      md5: a450a299d8910c60df317b059293a50b
-      size: 2105
+      md5: dfde9ef663c2432dc015e436d1bd6146
+      size: 2131
     params:
       params.yaml:
         train:
@@ -23,11 +23,11 @@ stages:
       md5: 039a2d2ccc3b355739528232912e4a51
       size: 255
     - path: ./results/test_preds.csv
-      md5: 80e595090e95a7ab193bbf454ab1253b
-      size: 13334
+      md5: 18cd9d70c780e85d677226f34394b627
+      size: 4128
     - path: ./results/train_preds.csv
-      md5: 263e55658bb98f858b11a906c43fb933
-      size: 20551
+      md5: 5297ce2739f8ce078da9623958bea0ba
+      size: 6190
   clean_data:
     cmd: ./build/virtualenv/bin/python src/process_data.py
     deps:
@@ -62,3 +62,22 @@ stages:
     - path: ./data/processed/train.csv
       md5: 512caa781567ed847b3ef13174e11c90
       size: 265769
+  evaluate:
+    cmd: ./build/virtualenv/bin/python src/evaluate.py
+    deps:
+    - path: ./data/processed/test.csv
+      md5: eac391f705cc77ea63bc2bdbba2de79c
+      size: 171904
+    - path: ./data/processed/train.csv
+      md5: 512caa781567ed847b3ef13174e11c90
+      size: 265769
+    - path: ./models/label_encoder.pk
+      md5: 039a2d2ccc3b355739528232912e4a51
+      size: 255
+    - path: src/evaluate.py
+      md5: 64975b3d728e4cf4e5a66b066b5334c4
+      size: 631
+    outs:
+    - path: ./results/metrics.json
+      md5: bc63a337522b503005a1246174ed36ec
+      size: 703

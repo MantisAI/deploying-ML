@@ -31,3 +31,12 @@ stages:
         - ./results/train_preds.csv
         - ./results/test_preds.csv
         - ./models/label_encoder.pk
+    evaluate:
+      cmd: ${python} src/evaluate.py
+      deps:
+        - src/evaluate.py
+        - ./data/processed/train.csv
+        - ./data/processed/test.csv
+        - ./models/label_encoder.pk
+      metrics:
+        - ./results/metrics.json

@@ -205,3 +205,71 @@ The dag from `dvc dag` now looks like:
                       | train |                        
                       +-------+                        
 ```
+
+## Evaluate model (6-evaluate-model)
+
+We add a script to run the evaluation of the model by comparing the true test labels with the predictions.
+
+```
++----------------------------------------------------+ 
+| data/raw/SPAM text message 20170820 - Data.csv.dvc | 
++----------------------------------------------------+ 
+                           *                           
+                           *                           
+                           *                           
+                    +------------+                     
+                    | clean_data |                     
+                    +------------+                     
+                           *                           
+                           *                           
+                           *                           
+                 +------------------+                  
+                 | train_test_split |                  
+                 +------------------+                  
+                     **         **                     
+                   **             *                    
+                  *                **                  
+            +-------+                *                 
+            | train |              **                  
+            +-------+             *                    
+                     **         **                     
+                       **     **                       
+                         *   *                         
+                     +----------+                      
+                     | evaluate |                      
+                     +----------+                      
+```
+
+We create a file which contains the results of the evaluation (`./results/metrics.json`) and since we define this as a metric output from the evaluation task, we can check the results by running:
+
+```
+# To show all metrics (as a markdown table)
+
+dvc metrics show --md
+```
+
+To show just metrics that have changed:
+
+```
+ dvc metrics diff --md
+```
+
+| Path                 | Metric                 | HEAD   | workspace   | Change   |
+|----------------------|------------------------|--------|-------------|----------|
+| results/metrics.json | accuracy               | -      | 0.97576     | -        |
+| results/metrics.json | ham.f1-score           | -      | 0.98643     | -        |
+| results/metrics.json | ham.precision          | -      | 0.97426     | -        |
+| results/metrics.json | ham.recall             | -      | 0.9989      | -        |
+| results/metrics.json | ham.support            | -      | 1819        | -        |
+| results/metrics.json | macro avg.f1-score     | -      | 0.93665     | -        |
+| results/metrics.json | macro avg.precision    | -      | 0.98208     | -        |
+| results/metrics.json | macro avg.recall       | -      | 0.90109     | -        |
+| results/metrics.json | macro avg.support      | -      | 2063        | -        |
+| results/metrics.json | spam.f1-score          | -      | 0.88688     | -        |
+| results/metrics.json | spam.precision         | -      | 0.9899      | -        |
+| results/metrics.json | spam.recall            | -      | 0.80328     | -        |
+| results/metrics.json | spam.support           | -      | 244         | -        |
+| results/metrics.json | weighted avg.f1-score  | -      | 0.97465     | -        |
+| results/metrics.json | weighted avg.precision | -      | 0.97611     | -        |
+| results/metrics.json | weighted avg.recall    | -      | 0.97576     | -        |
+| results/metrics.json | weighted avg.support   | -      | 2063        | -        |
