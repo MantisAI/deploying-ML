@@ -148,3 +148,30 @@ total 428K
 
 dvc prompts us to add the dvc.lock file to git, which we should do if we are happy with the outcome of the pipeline run.
 
+
+## Separate the data into a train/test set (4-train-test-split)
+
+NOTE: In a real application we would probably also want to have a dev set, this is acting purely as a simple example.
+* We add a script to create the split (`src/process_data.py`)
+* We add a new stage to the dvc pipeline defined in `dvc.yaml` (train_test_split).
+* We define parameters for the train/test split script in `params.yaml`.
+
+The dag from `dvc dag` now looks like:
+```
+
++----------------------------------------------------+ 
+| data/raw/SPAM text message 20170820 - Data.csv.dvc | 
++----------------------------------------------------+ 
+                           *                           
+                           *                           
+                           *                           
+                    +------------+                     
+                    | clean_data |                     
+                    +------------+                     
+                           *                           
+                           *                           
+                           *                           
+                 +------------------+                  
+                 | train_test_split |                  
+                 +------------------+                  
+```
