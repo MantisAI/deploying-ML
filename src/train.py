@@ -27,6 +27,7 @@ test_path = "./data/processed/test.csv"
 train_pred_path = "./results/train_preds.csv"
 test_pred_path = "./results/test_preds.csv"
 label_encoder_path = "./models/label_encoder.pk"
+model_path = "./models/model.pk"
 
 # Read train and test data
 
@@ -69,3 +70,7 @@ logger.info("Saved {} predictions to {}", len(test_preds), test_pred_path)
 with open(label_encoder_path, "wb") as fd:
     pickle.dump(label_encoder, fd)
 logger.info("Saved label_encoder to {}", label_encoder_path)
+
+with open(model_path, "wb") as fd:
+    pickle.dump(clf, fd)
+logger.info("Saved model to {}", model_path)

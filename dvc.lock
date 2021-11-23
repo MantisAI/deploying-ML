@@ -10,8 +10,8 @@ stages:
       md5: 512caa781567ed847b3ef13174e11c90
       size: 265769
     - path: src/train.py
-      md5: 4db820d176535e41be1a85ca63e81827
-      size: 1966
+      md5: a450a299d8910c60df317b059293a50b
+      size: 2105
     params:
       params.yaml:
         train:
