@@ -19,3 +19,15 @@ stages:
       outs:
         - ./data/processed/train.csv
         - ./data/processed/test.csv
+    train:
+      cmd: ${python} src/train.py
+      params:
+        - train
+      deps:
+        - src/train.py
+        - ./data/processed/train.csv
+        - ./data/processed/test.csv
+      outs:
+        - ./results/train_preds.csv
+        - ./results/test_preds.csv
+        - ./models/label_encoder.pk

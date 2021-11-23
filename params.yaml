@@ -1,3 +1,8 @@
 train_test_split:
   test_prop: 0.4
   random_state: 1337
+train:
+  # One of linear, poly, rbf, sigmoid
+  kernel: rbf
+  reg_param: 1.0
+  poly_degree: 3
