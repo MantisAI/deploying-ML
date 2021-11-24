@@ -468,3 +468,24 @@ curl --header "Content-Type: application/json" --request POST \
 ```
 
 You will get a response of `{"result":"spam"}`.
+
+
+## Containerising the API with docker (10-containerisation)
+
+Finally, we can containerise the API for easier deployment by creating a `Dockerfile`. We use `docker-compose.yaml` to define how we want that container to be built and launched.
+
+To build and launch the container:
+
+```
+docker-compose up --build
+```
+
+Note that we need to set both the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables on our local environment where we launch the container. These env vars should allow us to use an AWS user with read access to the s3 bucket we are using as the dvc remote.
+
+We can test the container in the same way we tested the API locally, with: `make test-api`.
+
+To stop the container, run:
+
+```
+docker-compose down
+```

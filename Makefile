@@ -30,9 +30,8 @@ virtualenv: $(VIRTUALENV)
 # date.
 
 .PHONY: update-requirements-txt
-update-requirements-txt: unpinned_requirements.txt
 update-requirements-txt: VIRTUALENV := /tmp/update-requirements-virtualenv
-update-requirements-txt:
+update-requirements-txt: unpinned_requirements.txt
 	@if [ -d $(VIRTUALENV) ]; then rm -rf $(VIRTUALENV); fi
 	@mkdir -p $(VIRTUALENV)
 	virtualenv --python $(PYTHON_VERSION) $(VIRTUALENV)

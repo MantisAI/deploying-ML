@@ -1,0 +1,6 @@
+.dvc
+.envrc
+build
+data
+models
+results

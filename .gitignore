@@ -2,3 +2,4 @@ build/
 models/*.pk
 results/*.csv
 src/__pycache__/
+.envrc

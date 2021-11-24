@@ -1,7 +1,8 @@
 dvc[s3]
-sklearn
-pandas
-loguru
-typer
 fastapi
 gunicorn
+loguru
+pandas
+sklearn
+typer
+uvicorn

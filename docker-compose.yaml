@@ -1,0 +1,23 @@
+version: '3.6'
+
+x-app-env: &app-env
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  AWS_REGION: eu-west-1
+  REV: main
+  REMOTE: s3
+
+services:
+
+  app:
+    image: aimlac-demo:0.1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        <<: *app-env
+    restart: on-failure
+    environment:
+      <<: *app-env
+    ports:
+      - 0.0.0.0:8000:8000
