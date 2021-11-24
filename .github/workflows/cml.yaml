@@ -18,8 +18,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: eu-west-1
         run: |
-          pip install -r requirements.txt
-          pip install boto3
+          make virtualenv
           dvc pull data/raw/SPAM\ text\ message\ 20170820\ -\ Data.csv
           dvc repro --pull
 
