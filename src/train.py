@@ -28,6 +28,7 @@ train_pred_path = "./results/train_preds.csv"
 test_pred_path = "./results/test_preds.csv"
 label_encoder_path = "./models/label_encoder.pk"
 model_path = "./models/model.pk"
+vectorizer_path = "./models/vectorizer.pk"
 
 # Read train and test data
 
@@ -74,3 +75,7 @@ logger.info("Saved label_encoder to {}", label_encoder_path)
 with open(model_path, "wb") as fd:
     pickle.dump(clf, fd)
 logger.info("Saved model to {}", model_path)
+
+with open(vectorizer_path, "wb") as fd:
+    pickle.dump(vectorizer, fd)
+logger.info("Saved vectorizer to {}", vectorizer_path)

@@ -39,3 +39,14 @@ update-requirements-txt:
 	$(VIRTUALENV)/bin/pip3 install --upgrade -r unpinned_requirements.txt
 	echo "# Created by 'make update-requirements-txt'. DO NOT EDIT!" > requirements.txt
 	$(VIRTUALENV)/bin/pip freeze | grep -v pkg-resources==0.0.0 >> requirements.txt
+
+
+.PHONY: serve
+serve: 
+	$(VIRTUALENV)/bin/uvicorn src.api:app --reload
+
+.PHONY: test-api
+test-api:
+	curl --header "Content-Type: application/json" --request POST \
+		--data '{"text":"You'\''ve WON a PRIZE, text back to find out what"}' \
+		localhost:8000/predict

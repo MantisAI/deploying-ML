@@ -1,3 +1,4 @@
 build/
 models/*.pk
 results/*.csv
+src/__pycache__/

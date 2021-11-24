@@ -2,7 +2,7 @@
 
 Code used in a workshop on deploying machine learning models and MLOPs for the November 2021 Cohort Training for the AIMLAC Doctoral Training Centre, UK.
 
-The repro is an example of how to produce a reproducible pipeline for training a machine learning model for text categorisation. It focuses on the binary classification task of separating ham from spam text messages, using a [kaggle dataset of 5157 text messages](https://www.kaggle.com/team-ai/spam-text-message-classification).
+The repro is an example of how to produce a reproducible pipeline for training a machine learning model for text categorisation. It focuses on the binary classification task of separating `ham` from `spam` text messages, using a [kaggle dataset of 5157 text messages](https://www.kaggle.com/team-ai/spam-text-message-classification).
 
 The various stages of the presentation have been labelled with git tags, so you can easily jump to the stage of interest. These stages are described below with the commands used to create them (if applicable).
 
@@ -385,3 +385,86 @@ We can now check the metrics change with `dvc metrics --diff` as before
 | results/test_metrics.json  | weighted avg.recall    | 0.97576 | 0.98254     | 0.00678  |
 | results/test_metrics.json  | weighted avg.support   | 2063    | 1031        | -1032    |
 
+# dvc experiments
+
+Up until now, we have assumed that any change to a parameter that results in the pipeline being re-run, would require that we create a new commit in order to record it in our history. That is somewhat inconvenient, and fortunately dvc offers a solution to make running experiments simpler.
+
+If we want to queue up a lot of experiments and run them sequentially, or in parralel, we can use the `dvc exp` command.
+
+For instance, the following command will queue up five experiments that we will the execute in turn, each with a different train/test split.
+
+```
+dvc exp run --queue -S params.yaml:train_test_split.test_prop=0.1
+dvc exp run --queue -S params.yaml:train_test_split.test_prop=0.2
+dvc exp run --queue -S params.yaml:train_test_split.test_prop=0.3
+dvc exp run --queue -S params.yaml:train_test_split.test_prop=0.4
+dvc exp run --queue -S params.yaml:train_test_split.test_prop=0.5
+```
+
+We can check the list of experiments as a markdown table (we can also save to csv, or json) with:
+
+```
+dvc exp show --md --no-pager \
+    --include-metrics "weighted avg.f1-score" \
+    --include-metrics "weighted avg.support"
+```
+
+| Experiment   | Created   | State   | results/train_metrics.json:weighted avg.f1-score   | results/test_metrics.json:weighted avg.f1-score   | train_test_split.test_prop   |
+|--------------|-----------|---------|----------------------------------------------------|---------------------------------------------------|------------------------------|
+| workspace    | -         | -       | 0.99732                                            | 0.9821                                            | 0.2                          |
+| main         | 04:15 PM  | -       | 0.99732                                            | 0.9821                                            | 0.2                          |
+| ├── 726fd28  | 04:16 PM  | Queued  | -                                                  | -                                                 | 0.5                          |
+| ├── 0ec1387  | 04:16 PM  | Queued  | -                                                  | -                                                 | 0.4                          |
+| ├── bb1c240  | 04:16 PM  | Queued  | -                                                  | -                                                 | 0.3                          |
+| ├── c6fd1fd  | 04:16 PM  | Queued  | -                                                  | -                                                 | 0.2                          |
+| └── 41a6d76  | 04:16 PM  | Queued  | -                                                  | -                                                 | 0.1                          |
+
+Once we are happy with our queue, we can execute all the experiments with:
+
+```
+# --jobs will run 10 experiments in parralel
+
+dvc exp run --run-all --jobs 10 
+```
+
+If we check the results again with `dvc exp show`, the results will now be populated in the table:
+
+| Experiment              | Created   | results/train_metrics.json:weighted avg.f1-score   | results/test_metrics.json:weighted avg.f1-score   | train_test_split.test_prop   |
+|-------------------------|-----------|----------------------------------------------------|---------------------------------------------------|------------------------------|
+| workspace               | -         | 0.99732                                            | 0.9821                                            | 0.2                          |
+| main                    | 04:15 PM  | 0.99732                                            | 0.9821                                            | 0.2                          |
+| ├── 14055fb [exp-46088] | 04:17 PM  | 0.9975                                             | 0.97786                                           | 0.3                          |
+| ├── 52386c7 [exp-d053f] | 04:17 PM  | 0.99697                                            | 0.98616                                           | 0.1                          |
+| ├── 5003c73 [exp-ad17f] | 04:17 PM  | 0.99766                                            | 0.97524                                           | 0.5                          |
+| └── fe55962 [exp-597b7] | 04:17 PM  | 0.9974                                             | 0.97465                                           | 0.4                          |
+
+
+Here we see that the experiment with a train/test split of 0.1 is the best performing. We can select that one and apply it to the current workspace with:
+
+```
+dvc exp apply exp-d053f
+```
+
+Now we can continue to work as usual and commit the parameter changes to git.
+
+
+## A simple RESTful HTTP API (9-simple-restful-api)
+
+We add a simple API using [fastapi](https://fastapi.tiangolo.com/) in `./src/api.py` which takes raw text as an input and returns a class: either `spam` or `ham`.
+
+To launch the API (in development mode) run: `make serve` or:
+
+```
+build/virtualenv/bin/uvicorn src.api:app --reload
+```
+
+In another terminal you can test the API by making POST requests to it with curl with `make test-api`, or:
+
+```
+curl --header "Content-Type: application/json" --request POST \
+    --data '{"text":"You'\''ve WON a PRIZE, text back to find out what"}' \
+    localhost:8000/predict
+
+```
+
+You will get a response of `{"result":"spam"}`.

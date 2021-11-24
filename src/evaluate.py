@@ -30,7 +30,6 @@ def evaluate(
     preds = pd.read_csv(preds_path)
     preds = label_encoder.inverse_transform(preds).ravel()
 
-    logger.info("\n{}", str(metrics.classification_report(y_true, preds)))
     results = metrics.classification_report(y_true, preds, output_dict=True)
 
     with open(metrics_path, "w") as fd:

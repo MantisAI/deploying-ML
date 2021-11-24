@@ -1,5 +1,5 @@
 vars:
-  - python: ./build/virtualenv/bin/python
+  - python: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
 
 stages:
     clean_data:
@@ -31,6 +31,8 @@ stages:
         - ./results/train_preds.csv
         - ./results/test_preds.csv
         - ./models/label_encoder.pk
+        - ./models/model.pk
+        - ./models/vectorizer.pk
     evaluate:
       foreach:
         - train
@@ -46,6 +48,7 @@ stages:
           - src/evaluate.py
           - ./data/processed/train.csv
           - ./data/processed/test.csv
+          - ./results/${item}_preds.csv
           - ./models/label_encoder.pk
         metrics:
           - ./results/${item}_metrics.json

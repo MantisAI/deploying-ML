@@ -3,3 +3,5 @@ sklearn
 pandas
 loguru
 typer
+fastapi
+gunicorn
