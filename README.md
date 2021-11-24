@@ -333,3 +333,55 @@ And we can check the results:
 | results/train_metrics.json | weighted avg.recall    | -                  | 0.99741 | -        |
 | results/train_metrics.json | weighted avg.support   | -                  | 3094    | -        |
 
+## Adjust parameters and iterate (8-iterate)
+
+Change a parameter in `params.yaml`, for example `test_prop=0.2`. We can then check the implication of this change by running:
+
+```
+>>> dvc status
+train_test_split:
+        changed deps:
+                params.yaml:
+                        modified:           train_test_split
+```
+
+This indicates, as expected, that the `train_test_split` stage is affected by the parameter change, so if we run `dvc repro` we can expect this and all stages that depend on it to be reproduced.
+
+```
+>>> dvc repro 
+'data/raw/SPAM text message 20170820 - Data.csv.dvc' didn't change, skipping
+Stage 'clean_data' didn't change, skipping
+Running stage 'train_test_split':
+Updating lock file 'dvc.lock'
+
+Running stage 'train':
+> ./build/virtualenv/bin/python src/train.py
+Updating lock file 'dvc.lock'
+
+Running stage 'evaluate':
+> ./build/virtualenv/bin/python src/evaluate.py
+Updating lock file 'dvc.lock'
+
+To track the changes with git, run:
+
+        git add dvc.lock
+Use `dvc push` to send your updates to remote storage.
+```
+
+We can now check the metrics change with `dvc metrics --diff` as before
+
+```
+>>> dvc metrics diff 6-evaluate-model main --md | grep -E "(Path|---|weighted)"
+```
+
+| Path                       | Metric                 | main    | workspace   | Change   |
+|----------------------------|------------------------|---------|-------------|----------|
+| results/train_metrics.json | weighted avg.f1-score  | 0.9974  | 0.99732     | -8e-05   |
+| results/train_metrics.json | weighted avg.precision | 0.99742 | 0.99734     | -8e-05   |
+| results/train_metrics.json | weighted avg.recall    | 0.99741 | 0.99733     | -8e-05   |
+| results/train_metrics.json | weighted avg.support   | 3094    | 4126        | 1032     |
+| results/test_metrics.json  | weighted avg.f1-score  | 0.97465 | 0.9821      | 0.00745  |
+| results/test_metrics.json  | weighted avg.precision | 0.97611 | 0.98238     | 0.00626  |
+| results/test_metrics.json  | weighted avg.recall    | 0.97576 | 0.98254     | 0.00678  |
+| results/test_metrics.json  | weighted avg.support   | 2063    | 1031        | -1032    |
+
