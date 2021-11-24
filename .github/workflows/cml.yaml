@@ -11,9 +11,9 @@ jobs:
         with:
           python-version: '3.8.5'
       - name: Install dependencies
-      run: |
-        apt-get update -y
-        apt-get install make virtualenv
+        run: |
+          apt-get update -y
+          apt-get install make virtualenv
       - uses: iterative/setup-cml@v1
       - name: Train model
         env:
