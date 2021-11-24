@@ -32,11 +32,20 @@ stages:
         - ./results/test_preds.csv
         - ./models/label_encoder.pk
     evaluate:
-      cmd: ${python} src/evaluate.py
-      deps:
-        - src/evaluate.py
-        - ./data/processed/train.csv
-        - ./data/processed/test.csv
-        - ./models/label_encoder.pk
-      metrics:
-        - ./results/metrics.json
+      foreach:
+        - train
+        - test
+      do:
+        cmd: >-
+          ${python} src/evaluate.py
+          --preds-path ./results/${item}_preds.csv
+          --true-path ./data/processed/${item}.csv
+          --label-encoder-path ./models/label_encoder.pk
+          --metrics-path ./results/${item}_metrics.json
+        deps:
+          - src/evaluate.py
+          - ./data/processed/train.csv
+          - ./data/processed/test.csv
+          - ./models/label_encoder.pk
+        metrics:
+          - ./results/${item}_metrics.json

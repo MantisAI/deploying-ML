@@ -273,3 +273,63 @@ To show just metrics that have changed:
 | results/metrics.json | weighted avg.precision | -      | 0.97611     | -        |
 | results/metrics.json | weighted avg.recall    | -      | 0.97576     | -        |
 | results/metrics.json | weighted avg.support   | -      | 2063        | -        |
+
+
+## Get train metrics (7-create-cli)
+
+DVC allows us to create for loops within the pipeline. Imagine for instance that we want to collect metrics from predictions made on the training set to help us diagnose overfitting. We can do this by parameterising our `src/evaluate.py`. 
+
+We use the library [typer](https://typer.tiangolo.com/typer-cli/) to create a simple command line interface for the evaluate script. We then call this script from `dvc.yaml` as usual, but convert the stage into a [foeach stage](https://dvc.org/doc/user-guide/project-structure/pipelines-files#foreach-stages). These stages are very poweful because they allow us to iterate through multiple datasets, models, etc. in just a few lines of code.
+
+The `dvc dag` now looks like:
+
+```
++----------------------------------------------------+ 
+| data/raw/SPAM text message 20170820 - Data.csv.dvc | 
++----------------------------------------------------+ 
+                           *                           
+                           *                           
+                           *                           
+                    +------------+                     
+                    | clean_data |                     
+                    +------------+                     
+                           *                           
+                           *                           
+                           *                           
+                 +------------------+                  
+                 | train_test_split |                  
+                 +------------------+*                 
+             ****          *          ****             
+         ****              *              ****         
+     ****                  *                  ****     
+  ***                 +-------+                   ***  
+    *                 | train |                  ***   
+     ***              +-------+**               *      
+        *           **           **          ***       
+         ***      **               **       *          
+            *   **                   **   **           
+     +----------------+         +---------------+      
+     | evaluate@train |         | evaluate@test |      
+     +----------------+         +---------------+      
+```
+
+And we can check the results:
+
+```
+>>> dvc metrics diff 6-evaluate-model main --md | grep -E "(Path|---|weighted)"
+```
+| Path                       | Metric                 | 6-evaluate-model   | main    | Change   |
+|----------------------------|------------------------|--------------------|---------|----------|
+| results/metrics.json       | weighted avg.f1-score  | 0.97465            | -       | -        |
+| results/metrics.json       | weighted avg.precision | 0.97611            | -       | -        |
+| results/metrics.json       | weighted avg.recall    | 0.97576            | -       | -        |
+| results/metrics.json       | weighted avg.support   | 2063               | -       | -        |
+| results/test_metrics.json  | weighted avg.f1-score  | -                  | 0.97465 | -        |
+| results/test_metrics.json  | weighted avg.precision | -                  | 0.97611 | -        |
+| results/test_metrics.json  | weighted avg.recall    | -                  | 0.97576 | -        |
+| results/test_metrics.json  | weighted avg.support   | -                  | 2063    | -        |
+| results/train_metrics.json | weighted avg.f1-score  | -                  | 0.9974  | -        |
+| results/train_metrics.json | weighted avg.precision | -                  | 0.99742 | -        |
+| results/train_metrics.json | weighted avg.recall    | -                  | 0.99741 | -        |
+| results/train_metrics.json | weighted avg.support   | -                  | 3094    | -        |
+

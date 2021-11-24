@@ -3,22 +3,40 @@ import pickle
 
 import pandas as pd
 import sklearn.metrics as metrics
+import typer
+from loguru import logger
 
-preds_path = "./results/test_preds.csv"
-true_path = "./data/processed/test.csv"
-label_encoder_path = "./models/label_encoder.pk"
-metrics_path = "./results/metrics.json"
+app = typer.Typer()
 
-with open(label_encoder_path, "rb") as fd:
-    label_encoder = pickle.load(fd)
+@app.command()
+def evaluate(
+    preds_path: str = typer.Option(..., help="Path to predicted labels (csv.)"),
+    true_path: str = typer.Option(..., help="Path to true labels (csv)."),
+    label_encoder_path: str = typer.Option(..., help="Path label encoder (pickle)."),
+    metrics_path: str = typer.Option(..., help="Path to save metrics json."),
+):
 
-true = pd.read_csv(true_path)
-y_true = true["Category"].values
+    # Load label_encoder object
 
-preds = pd.read_csv(preds_path)
-preds = label_encoder.inverse_transform(preds).ravel()
+    with open(label_encoder_path, "rb") as fd:
+        label_encoder = pickle.load(fd)
+    logger.info("Loaded label encoder from {}", label_encoder_path)
 
-results = metrics.classification_report(y_true, preds, output_dict=True)
+    # NOTE: This scripts expects csv files with two columns [Category, Message]
 
-with open(metrics_path, "w") as fd:
-    json.dump(results, fd, indent=4)
+    true = pd.read_csv(true_path)
+    y_true = true["Category"].values
+
+    preds = pd.read_csv(preds_path)
+    preds = label_encoder.inverse_transform(preds).ravel()
+
+    logger.info("\n{}", str(metrics.classification_report(y_true, preds)))
+    results = metrics.classification_report(y_true, preds, output_dict=True)
+
+    with open(metrics_path, "w") as fd:
+        json.dump(results, fd, indent=4)
+    logger.info("Saved metrics to {}", metrics_path)
+
+
+if __name__ == "__main__":
+    app()
