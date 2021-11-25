@@ -1,5 +1,5 @@
 vars:
-  - python: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
+  - python: ./build/virtualenv/bin/python
 
 stages:
     clean_data:

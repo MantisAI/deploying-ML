@@ -1,8 +1,7 @@
 schema: '2.0'
 stages:
   train:
-    cmd: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
-      src/train.py
+    cmd: ./build/virtualenv/bin/python src/train.py
     deps:
     - path: ./data/processed/test.csv
       md5: ceb479644cf174b8157f8ba858c8f4a6
@@ -36,8 +35,7 @@ stages:
       md5: d2a17006d876e2aa2ab4c1f4fcc3269e
       size: 8254
   clean_data:
-    cmd: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
-      src/process_data.py
+    cmd: ./build/virtualenv/bin/python src/process_data.py
     deps:
     - path: ./data/raw/SPAM text message 20170820 - Data.csv
       md5: 4566fe81ccd7961063e393a99e8ec2f1
@@ -50,8 +48,7 @@ stages:
       md5: eee15aac82d82a827923651764e84c9d
       size: 437656
   train_test_split:
-    cmd: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
-      src/train_test_split.py
+    cmd: ./build/virtualenv/bin/python src/train_test_split.py
     deps:
     - path: ./data/processed/spam_data.csv
       md5: eee15aac82d82a827923651764e84c9d
@@ -93,9 +90,9 @@ stages:
       md5: bc63a337522b503005a1246174ed36ec
       size: 703
   evaluate@train:
-    cmd: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
-      src/evaluate.py --preds-path ./results/train_preds.csv --true-path ./data/processed/train.csv
-      --label-encoder-path ./models/label_encoder.pk --metrics-path ./results/train_metrics.json
+    cmd: ./build/virtualenv/bin/python src/evaluate.py --preds-path ./results/train_preds.csv
+      --true-path ./data/processed/train.csv --label-encoder-path ./models/label_encoder.pk
+      --metrics-path ./results/train_metrics.json
     deps:
     - path: ./data/processed/test.csv
       md5: ceb479644cf174b8157f8ba858c8f4a6
@@ -117,9 +114,9 @@ stages:
       md5: b6efbc3e993ab4f48eb68342522f6692
       size: 673
   evaluate@test:
-    cmd: ~/Documents/mantis/aimlac/deploying-machine-learning-models/build/virtualenv/bin/python
-      src/evaluate.py --preds-path ./results/test_preds.csv --true-path ./data/processed/test.csv
-      --label-encoder-path ./models/label_encoder.pk --metrics-path ./results/test_metrics.json
+    cmd: ./build/virtualenv/bin/python src/evaluate.py --preds-path ./results/test_preds.csv
+      --true-path ./data/processed/test.csv --label-encoder-path ./models/label_encoder.pk
+      --metrics-path ./results/test_metrics.json
     deps:
     - path: ./data/processed/test.csv
       md5: ceb479644cf174b8157f8ba858c8f4a6
