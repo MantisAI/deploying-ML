@@ -423,6 +423,7 @@ Once we are happy with our queue, we can execute all the experiments with:
 
 ```
 # --jobs will run 10 experiments in parralel
+# Ensure you have activated your virtualenv before running
 
 dvc exp run --run-all --jobs 10 
 ```
